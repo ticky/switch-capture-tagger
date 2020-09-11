@@ -1,5 +1,7 @@
 # Switch Capture Tagger
 
+[![AppleScript](https://github.com/ticky/switch-capture-tagger/workflows/AppleScript/badge.svg)](https://github.com/ticky/switch-capture-tagger/actions?query=workflow%3AAppleScript)
+
 Automatically correct and update metadata in Nintendo Switch captures imported to Apple Photos
 
 ## Features
