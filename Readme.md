@@ -19,12 +19,14 @@ The album needs to be called "Switch Capture Tagger Scratch". A Smart Album with
 > Match `all 🡙` of the following conditions:  
 >  `Camera Model 🡙` `is empty         🡙`  
 >  `Lens         🡙` `is empty         🡙`  
->  `Filename     🡙` `includes         🡙` `-`  
->  `Filename     🡙` `does not include 🡙` ` `  
->  `Filename     🡙` `does not include 🡙` `n`  
->  `Filename     🡙` `does not include 🡙` `o`
+>  `Filename     🡙` `includes         🡙` `"-"`  
+>  `Filename     🡙` `does not include 🡙` `" "`  
+>  `Filename     🡙` `does not include 🡙` `"n"`  
+>  `Filename     🡙` `does not include 🡙` `"o"`
 
-Note that this works well with target albums of around 300 files on my machine. Larger albums tend to time out when querying and I have yet to find a workaround. If your Smart Album returns a very large number of items, you may need to rename it and use a manually-managed album where you drag around 150-300 items and run Switch Capture Tagger over each group. Suggestions for how to better handle this performance problem are very welcome!
+Note that the Filename matches need to be entered without the quotation marks.
+
+This works well with target albums of around 300 files on my machine. Larger albums tend to time out when querying and I have yet to find a workaround. If your Smart Album returns a very large number of items, you may need to rename it and use a manually-managed album where you drag around 150-300 items and run Switch Capture Tagger over each group. Suggestions for how to better handle this performance problem are very welcome!
 
 ## Download
 
