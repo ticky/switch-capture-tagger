@@ -1,10 +1,10 @@
-/* global Application */
+/* global Application, Progress */
 (() => {
 	// Because filtering the entire Photos library is very slow,
 	// we need to use a Smart Album to speed things up.
 	//
 	// You'll need to create a Smart Album with this exact name:
-	const SMART_ALBUM_NAME = "Switch Capture Tagger Scratch";
+	const SMART_ALBUM_NAME = 'Switch Capture Tagger Scratch';
 	// and to make sure that it has these filter settings:
 	//
 	//   Match [all ] of the following conditions:
@@ -34,8 +34,8 @@
 	ScriptRunner.includeStandardAdditions = true;
 	
 	Progress.completedUnitCount = 0;
-	Progress.description = "Preparing";
-	Progress.additionalDescription = `Looking for source album`;
+	Progress.description = 'Preparing';
+	Progress.additionalDescription = 'Looking for source album';
 
 	const Photos = Application('Photos');
 	
@@ -43,7 +43,7 @@
 	const albums = Photos.albums.whose({ name: SMART_ALBUM_NAME });
 	if (albums.length !== 1) {
 		ScriptRunner.displayAlert(
-			"Error finding Album",
+			'Error finding Album',
 			{
 				as: 'critical',
 				message: `${albums.length > 1 ? 'Too many matching albums were' : 'No matching album was'} found.\n\nPlease make sure there is a “${SMART_ALBUM_NAME}” Smart Album which filters for items with empty Camera Model and Lens, and file names including “-” and not including “n”, “o” or “ ”.\n\nFor more information please see the script.`
@@ -53,40 +53,41 @@
 		return 2;
 	}
 
-	Progress.additionalDescription = "Downloading list of Nintendo Switch title IDs";
+	Progress.additionalDescription = 'Downloading list of Nintendo Switch title IDs';
 
 	// We pinch a mapping of title IDs to game names from the Switch-Screenshots project
-	const GAME_IDS = ((url) => JSON.parse(ScriptRunner.doShellScript(`curl -sL "${url}"`)))("https://github.com/RenanGreca/Switch-Screenshots/raw/master/game_ids.json");
+	const GAME_IDS = ((url) => JSON.parse(ScriptRunner.doShellScript(`curl -sL "${url}"`)))('https://github.com/RenanGreca/Switch-Screenshots/raw/master/game_ids.json');
 	
 	// Keep track of how many items were Switch items, and how many needed updates
 	let matchedItems = 0;
 	let updatedItems = 0;
 
-	Progress.description = "Processing Nintendo Switch captures";
-	Progress.additionalDescription = "Getting a list of captures";
+	Progress.description = 'Processing Nintendo Switch captures';
+	Progress.additionalDescription = 'Getting a list of captures';
 
 	// Here we whittle down the items further, because
 	// the Smart Album can't filter on dimensions or handle
 	// the _or clause we do here.
 	Array.prototype.forEach.call(
-		albums.first.mediaItems.whose({
-			width: 1280,
-			height: 720,
-			filename: {
-				_contains: '-'
-			},
-			_or: [
-				{ filename: { _endsWith: '.mp4' } },
-				{ filename: { _endsWith: '.jpg' } }
-			]
-		})
-		.id(),
+		albums.first.mediaItems
+			.whose({
+				width: 1280,
+				height: 720,
+				filename: {
+					_contains: '-'
+				},
+				_or: [
+					{ filename: { _endsWith: '.mp4' } },
+					{ filename: { _endsWith: '.jpg' } }
+				]
+			})
+			.id(),
 		(id, index, array) => {
 			if (index === 0) {
 				Progress.totalUnitCount = array.length;
 			}
 
-    		Progress.additionalDescription = `Analysing capture ${index + 1} of ${array.length}`
+			Progress.additionalDescription = `Analysing capture ${index + 1} of ${array.length}`;
 
 			// We cannot rely on the index-based collection normally returned
 			// by filtering on mediaItems, as we manipulate properties which
@@ -107,7 +108,7 @@
 			let updated = false;
 
 			// Grab the information out of the filename.
-			const { year, month, day, hour, minute, second, titleId, extension } = match.groups;
+			const { year, month, day, hour, minute, second, titleId } = match.groups;
 
 			// The Switch was released to the public in 2017, and until
 			// system update 10.0.0 on April 16th, 2020 it emitted broken
@@ -175,12 +176,12 @@
 		}
 	);
 
-	Progress.description = "Finished processing Nintendo Switch captures";
-	Progress.additionalDescription = "Reporting the results to you!";
+	Progress.description = 'Finished processing Nintendo Switch captures';
+	Progress.additionalDescription = 'Reporting the results to you!';
 
 	if (matchedItems == 0) {
 		ScriptRunner.displayAlert(
-			"Switch Capture Tagger",
+			'Switch Capture Tagger',
 			{
 				as: 'critical',
 				message: `No Switch captures were found in the “${SMART_ALBUM_NAME}” Smart Album.\n\nIf you expected some, double check they weren't renamed before importing.`
@@ -190,7 +191,7 @@
 		return 1;
 	} else {
 		ScriptRunner.displayAlert(
-			"Switch Capture Tagger",
+			'Switch Capture Tagger',
 			{
 				as: 'informational',
 				message: `Of the ${matchedItems.toLocaleString()} Switch capture${matchedItems.toLocaleString === 1 ? '' : 's'} in “${SMART_ALBUM_NAME}”, ${updatedItems.toLocaleString()} needed metadata updates.`
